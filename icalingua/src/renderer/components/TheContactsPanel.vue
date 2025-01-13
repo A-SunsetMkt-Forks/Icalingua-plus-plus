@@ -56,6 +56,28 @@
                         @dblclick="$emit('dblclick', -i.group_id, i.group_name)"
                     />
                 </el-tab-pane>
+                <el-tab-pane label="Categories" name="categories" v-if="chatGroups != null">
+                    <el-collapse v-model="activeChatGroups">
+                        <el-collapse-item
+                            v-for="(v, i) in chatGroups"
+                            :title="v.name"
+                            :name="i"
+                            :key="i"
+                            ref="chat-groups"
+                        >
+                            <ContactEntry
+                                v-for="i in v.rooms"
+                                :key="i"
+                                :id="i"
+                                :name="`${getName(i)}`"
+                                :remark="`${getRemark(i)}`"
+                                v-show="i != -1"
+                                @click="$emit('click', i, getRemark(i))"
+                                @dblclick="$emit('dblclick', i, getRemark(i))"
+                            />
+                        </el-collapse-item>
+                    </el-collapse>
+                </el-tab-pane>
             </el-tabs>
         </div>
     </div>
@@ -70,6 +92,7 @@ export default {
     components: { ContactEntry },
     props: {
         removeGroupNameEmotes: Boolean,
+        chatGroups: Array,
     },
     data() {
         return {
@@ -82,6 +105,7 @@ export default {
             searchContextEdit: '',
             activeFriendGroup: [],
             friendsFallback: [],
+            activeChatGroups: [0, 1],
         }
     },
     computed: {
@@ -98,6 +122,9 @@ export default {
             return this.friendsAll.map(
                 (friendGroup) => friendGroup.friends.filter((f) => f.sc.includes(this.searchContextEdit)).length,
             )
+        },
+        flatAllFriends() {
+            return this.friendsAll.reduce((s, p) => (s = [...s, ...p.friends]), [])
         },
     },
     watch: {
@@ -140,6 +167,25 @@ export default {
             })
         },
         PinyinMatch: PinyinMatch.match,
+        getTargetInfo(uin) {
+            if (uin > 0) {
+                return this.flatAllFriends.find((friend) => friend.uin === uin)
+            } else {
+                return this.groupsAll.find((group) => group.group_id === -uin)
+            }
+        },
+        getRemark(uin) {
+            if (uin == -1) return ''
+            const target = this.getTargetInfo(uin)
+            if (!target) return 'null'
+            return target.remark || target.name || target.group_remark || target.group_name
+        },
+        getName(uin) {
+            if (uin == -1) return ''
+            const target = this.getTargetInfo(uin)
+            if (!target) return 'null'
+            return target.nick || target.name || target.group_name
+        },
     },
 }
 </script>

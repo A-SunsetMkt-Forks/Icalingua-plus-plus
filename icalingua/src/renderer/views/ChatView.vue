@@ -192,7 +192,11 @@
             <TheContactsPanel @dblclick="startChat" :removeGroupNameEmotes="removeGroupNameEmotes" />
         </el-dialog>
         <el-dialog :title="forwardTitle" :visible.sync="forwardShown" top="5vh" class="dialog">
-            <TheContactsPanel @click="sendForward" :removeGroupNameEmotes="removeGroupNameEmotes" />
+            <TheContactsPanel
+                @click="sendForward"
+                :removeGroupNameEmotes="removeGroupNameEmotes"
+                :chatGroups="chatGroups"
+            />
         </el-dialog>
         <el-dialog title="群成员" :visible.sync="groupmemberShown" top="5vh" class="dialog">
             <TheGroupMemberPanel
@@ -673,7 +677,7 @@ export default {
         })
         ipcRenderer.on('updatePriority', (_, p) => this.priority = p)
         ipcRenderer.on('setAllRooms', (_, p) => this.rooms = p)
-        ipcRenderer.on('setAllChatGroups', (_, p) => this.chatGroups = p || [])
+        ipcRenderer.on('setAllChatGroups', (_, p) => (this.chatGroups = p || []) )
         ipcRenderer.on('setMessages', (_, p) => {
             for (const message of p) {
                 message.__v_skip = true
@@ -713,7 +717,9 @@ Chromium ${process.versions.chrome}` : ''
         ipcRenderer.on('setUsePanguJsRecv', (_, b) => {
             this.usePanguJsRecv = b
         })
-
+        ipcRenderer.on('forwardSingleMessage', (_, message_id) => {
+            this.chooseForwardTarget(false, false);
+        })
         ipc.setSelectedRoom(0, '')
         ipc.requestOnlineData()
 

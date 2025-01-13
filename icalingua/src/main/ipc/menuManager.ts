@@ -2288,6 +2288,14 @@ ipcMain.on('popupMessageMenu', async (_, e, room: Room, message: Message, sect?:
                         },
                     }),
                 )
+                menu.append(
+                    new MenuItem({
+                        label: '转发',
+                        click: () => {
+                            ui.forwardSingleMessage(message._id as string)
+                        },
+                    }),
+                )
             }
             menu.append(
                 new MenuItem({

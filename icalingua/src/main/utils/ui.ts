@@ -208,4 +208,7 @@ export default {
     setSortRoomsByPriority(enable: boolean) {
         sendToMainWindow('setSortRoomsByPriority', enable)
     },
+    forwardSingleMessage(_id: string) {
+        sendToMainWindow('forwardSingleMessage', _id)
+    },
 }

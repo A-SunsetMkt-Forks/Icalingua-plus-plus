@@ -921,6 +921,12 @@ export default {
         } else {
             this.recordPath = 'file://' + (await ipc.getStorePath()) + '/records'
         }
+        ipcRenderer.on('forwardSingleMessage', (_, _id) => {
+            this.showForwardPanel = true
+            this.selectedMessage = _id
+            this.msgsToForward.push(_id)
+            this.selectUpdateKey = 1
+        })
     },
     methods: {
         sendForward(target, name, multi = true, anonymous = false) {
