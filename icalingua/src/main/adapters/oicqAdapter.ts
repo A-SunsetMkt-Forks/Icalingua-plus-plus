@@ -1711,6 +1711,7 @@ const adapter: OicqAdapter = {
                     lottieType: 1,
                     packId: packId,
                     resultId: '',
+                    chainCount: null,
                 }
                 if (resultId) {
                     extra.lottieType = 2
@@ -1718,6 +1719,9 @@ const adapter: OicqAdapter = {
                 }
                 lottieFace.lottieId = qlottie
                 Object.assign(extra, lottieFace)
+                if (extra.lottieType === 3) {
+                    extra.chainCount = 114514
+                }
                 chain.length = chain[0].type === 'anonymous' ? 1 : 0
                 chain.push({
                     type: 'face',
