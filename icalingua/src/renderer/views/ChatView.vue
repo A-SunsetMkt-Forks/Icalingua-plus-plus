@@ -677,7 +677,7 @@ export default {
         })
         ipcRenderer.on('updatePriority', (_, p) => this.priority = p)
         ipcRenderer.on('setAllRooms', (_, p) => this.rooms = p)
-        ipcRenderer.on('setAllChatGroups', (_, p) => (this.chatGroups = p || []) )
+        ipcRenderer.on('setAllChatGroups', (_, p) => (this.chatGroups = p || []))
         ipcRenderer.on('setMessages', (_, p) => {
             for (const message of p) {
                 message.__v_skip = true
@@ -718,7 +718,7 @@ Chromium ${process.versions.chrome}` : ''
             this.usePanguJsRecv = b
         })
         ipcRenderer.on('forwardSingleMessage', (_, message_id) => {
-            this.chooseForwardTarget(false, false);
+            this.chooseForwardTarget(false, false)
         })
         ipc.setSelectedRoom(0, '')
         ipc.requestOnlineData()
