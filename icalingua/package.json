@@ -256,7 +256,7 @@
         "node-loader": "^0.6.0",
         "nodejs-base64": "^2.0.0",
         "prettier": "^2.8.8",
-        "sass": "^1.83.4",
+        "sass": "1.77.6",
         "sass-loader": "^10.5.2",
         "socket.io-client": "^4.8.1",
         "style-loader": "^0.21.0",
