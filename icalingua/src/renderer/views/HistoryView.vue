@@ -13,7 +13,6 @@
         :load-first-room="true"
         accepted-files="image/*"
         :message-actions="[]"
-        :styles="styles"
         :single-room="true"
         :room-id="0"
         :show-footer="false"
@@ -26,7 +25,6 @@
         :show-emojis="true"
         :loading-rooms="false"
         :text-formatting="true"
-        :style="[cssVars]"
         :linkify="linkify"
         :forward-res-id="resId"
         :usePanguJsRecv="usePanguJsRecv"
@@ -48,7 +46,7 @@ export default {
         return {
             room: {
                 roomId: 0,
-                roomName: 'Forwarded Messages',
+                roomName: 'Loading...',
                 users: [
                     { _id: 3, username: '3' },
                     { _id: 31, username: '3' },
@@ -67,6 +65,7 @@ export default {
         this.linkify = settings.linkify
         this.usePanguJsRecv = settings.usePanguJsRecv
         ipcRenderer.on('loadMessages', (event, args) => {
+            this.room.roomName = 'Forwarded Messages'
             let lastSeq = 0
             let fake = false
             let originId = -1
@@ -90,11 +89,6 @@ export default {
     },
     components: {
         Room,
-    },
-    computed: {
-        cssVars() {
-            return themes.recalcTheme()
-        },
     },
     methods: {
         openForward(e) {

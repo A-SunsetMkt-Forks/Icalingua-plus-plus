@@ -16,6 +16,7 @@ import { getConfig } from '../utils/configManager'
 import errorHandler from '../utils/errorHandler'
 import getFriends from '../utils/getFriends'
 import * as themes from '../utils/themes'
+import Message from '@icalingua/types/Message'
 import ChatGroup from '@icalingua/types/ChatGroup'
 import { spacingSendMessage } from '../../utils/panguSpacing'
 import silkEncode from '../utils/silkEncode'
@@ -197,11 +198,9 @@ ipcMain.on('openForward', async (_, resId: string, fileName?: string) => {
             contextIsolation: false,
         },
     })
-    const messages = await adapter.getForwardMsg(resId, fileName)
     win.loadURL(getWinUrl() + '#/history')
-    win.webContents.on('did-finish-load', function () {
-        win.webContents.send('loadMessages', messages)
-        win.webContents.send('setResId', resId)
+    let messages: Promise<Message[]> | Message[] = adapter.getForwardMsg(resId, fileName)
+    win.webContents.on('did-finish-load', async function () {
         // theme
         win.webContents.send('theme:sync-theme-data', themes.getThemeData())
         win.webContents.setZoomFactor(getConfig().zoomFactor / 100)
@@ -211,6 +210,10 @@ ipcMain.on('openForward', async (_, resId: string, fileName?: string) => {
                 action: 'deny',
             }
         })
+        // load messages
+        if (messages instanceof Promise) messages = await messages
+        win.webContents.send('loadMessages', messages)
+        win.webContents.send('setResId', resId)
     })
 })
 ipcMain.handle('getIgnoredChats', adapter.getIgnoredChats)
